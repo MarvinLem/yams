@@ -1,6 +1,6 @@
 <template>
   <div class="dices-replay">
-    <Dice v-for="dice in dices" :key="dice.index" :number="dice" :showEmpty="showEmpty" :rolling="rolling"/>
+    <Dice v-for="(dice, index) in dices" :key="index + '-' + dice"  :number="dice" :showEmpty="showEmpty" :rolling="rolling" state="replayable"/>
   </div>
 </template>
 

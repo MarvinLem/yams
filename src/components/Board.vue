@@ -1,12 +1,14 @@
 <template>
   <div class="board">
-    <DicesSaved :showEmpty="true" :dices="[0,0,0,0,0]"/>
+    <RemainingThrow/>
+    <DicesSaved :showEmpty="true"/>
     <DicesReplay :rolling="rolling" :showEmpty="false"/>
     <DicesActions :rolling="rolling"/>
   </div>
 </template>
 
 <script>
+import RemainingThrow from '@/components/RemainingThrow.vue';
 import DicesSaved from '@/components/DicesSaved.vue';
 import DicesReplay from '@/components/DicesReplay.vue';
 import DicesActions from '@/components/DicesActions.vue';
@@ -14,6 +16,7 @@ import DicesActions from '@/components/DicesActions.vue';
 export default {
   name: 'Board',
   components: {
+    RemainingThrow,
     DicesSaved,
     DicesReplay,
     DicesActions

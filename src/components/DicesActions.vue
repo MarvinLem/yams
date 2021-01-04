@@ -1,7 +1,7 @@
 <template>
   <div class="dices-actions">
-    <div v-if="!rolling" class="button" @click="shakeDices()">Melanger</div>
-    <div v-if="!rolling" class="button">Terminer la série</div>
+    <div v-if="!rolling && dices.length > 0 && remaining > 0" class="button" @click="shakeDices()">Melanger</div>
+    <div v-if="!rolling" class="button" @click="endSerie()">Terminer la série</div>
     <div v-if="rolling" class="button" @click="launchDices()">Lancer</div>
   </div>
 </template>
@@ -16,10 +16,16 @@ export default {
     dices () {
       return this.$store.state.dices
     },
+    remaining () {
+      return this.$store.state.remaining
+    }
   },
   methods: {
     shakeDices(){
       this.$store.commit('updateRolling', true);
+    },
+    endSerie(){
+      this.$store.commit('updateRemaining', 3);
     },
     launchDices(){
       this.$store.commit('updateRolling', false);
@@ -27,7 +33,8 @@ export default {
       for(let i=0;i<this.dices.length;i++){
         newDices.push(Math.floor(Math.random() * Math.floor(6) + 1))
       }
-      this.$store.commit('updateDices', newDices)
+      this.$store.commit('updateDices', newDices);
+      this.$store.commit('updateRemaining', this.remaining - 1);
     },
   }
 };

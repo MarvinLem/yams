@@ -1,6 +1,9 @@
 <template>
   <div class="scoreboard">
-
+    <RemainingTurn/>
+    <PlayersList names="[]" :numbersOfPlayers="2"/>
+    <RowsWithScore style="" image="" name="" scores="" />
+    <TotalScore totalScores=""/>
   </div>
 </template>
 

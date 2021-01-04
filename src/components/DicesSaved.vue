@@ -1,6 +1,6 @@
 <template>
   <div class="dices-saved">
-    <Dice v-for="dice in dices" :key="dice.index" :number="dice" :showEmpty="showEmpty"/>
+    <Dice v-for="(dice, index) in dicesSaved" :key="index + '-' + dice" :number="dice" :showEmpty="showEmpty" state="saved"/>
   </div>
 </template>
 
@@ -13,8 +13,12 @@ export default {
     Dice
   },
   props: {
-    dices: Array,
     showEmpty: Boolean
+  },
+  computed: {
+    dicesSaved() {
+      return this.$store.state.dicesSaved
+    },
   }
 };
 </script>
