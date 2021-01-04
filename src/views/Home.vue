@@ -1,11 +1,10 @@
 <template>
   <div class="home">
-    <GameSelector msg="Welcome to Your Vue.js App"/>
+    <GameSelector/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import GameSelector from '@/components/GameSelector.vue';
 
 export default {
