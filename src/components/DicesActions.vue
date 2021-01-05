@@ -1,7 +1,7 @@
 <template>
   <div class="dices-actions">
     <div v-if="!rolling && dices.length > 0 && remaining > 0" class="button" @click="shakeDices()">Melanger</div>
-    <div v-if="!rolling" class="button" @click="endSerie()">Terminer la série</div>
+    <div v-if="!rolling && remaining != 0" class="button" @click="endSerie()">Terminer la série</div>
     <div v-if="rolling" class="button" @click="launchDices()">Lancer</div>
   </div>
 </template>
@@ -14,10 +14,16 @@ export default {
   },
   computed: {
     dices () {
-      return this.$store.state.dices
+      return this.$store.state.dices;
     },
     remaining () {
-      return this.$store.state.remaining
+      return this.$store.state.remaining;
+    },
+    remainingTurn () {
+      return this.$store.state.remainingTurn;
+    },
+    scoreRows() {
+      return this.$store.state.scoreRows;
     }
   },
   methods: {
@@ -25,7 +31,11 @@ export default {
       this.$store.commit('updateRolling', true);
     },
     endSerie(){
-      this.$store.commit('updateRemaining', 3);
+      this.$store.commit('updateDicesSaved', this.$store.state.dicesSaved.concat(this.$store.state.dices));
+      this.$store.commit('updateDices', []);
+      this.$store.commit('updateRemaining', 0);
+      this.updatePotentialScores();
+      //this.$store.commit('updateRemainingTurn', this.remainingTurn - 1);
     },
     launchDices(){
       this.$store.commit('updateRolling', false);
@@ -35,7 +45,19 @@ export default {
       }
       this.$store.commit('updateDices', newDices);
       this.$store.commit('updateRemaining', this.remaining - 1);
+      if(this.remaining == 0){
+        this.$store.commit('updateDicesSaved', this.$store.state.dicesSaved.concat(this.$store.state.dices));
+        this.$store.commit('updateDices', []);
+        this.$store.commit('updateRemaining', 0);
+        this.updatePotentialScores(); 
+      }
     },
+    updatePotentialScores(){
+      let newScoreRows = this.scoreRows;
+      newScoreRows[0].potentialScores = [10];
+      console.log(newScoreRows);
+      this.$store.commit('updatePotentialScores', newScoreRows);
+    }
   }
 };
 </script>

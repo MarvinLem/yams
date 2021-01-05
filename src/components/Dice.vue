@@ -21,6 +21,11 @@ export default {
     rolling: Boolean,
     state: String
   },
+  computed: {
+    remaining() {
+      return this.$store.state.remaining
+    }
+  },
   methods:{
     currentlyRoll(){
       this.changingNumber = Math.floor(Math.random() * Math.floor(6) + 1);
@@ -29,25 +34,21 @@ export default {
       }
     },
     changeState(){
-      if(this.state == "replayable"){
+      if(this.state == "replayable" && this.rolling == false){
         let ancientDices = this.$store.state.dices;
         let savedDices = this.$store.state.dicesSaved;
         
         let removedDice = ancientDices.splice(ancientDices.indexOf(this.number),1);
 
-        let index = savedDices.indexOf(0)
-        savedDices.splice(index, 1);
-        savedDices.splice(index, 0, removedDice[0]);
+        savedDices.push(removedDice[0])
 
         this.$store.commit('updateDices', ancientDices);
         this.$store.commit('updateDicesSaved', savedDices);
-      } else if(this.state == "saved"){
+      } else if(this.state == "saved" && this.rolling == false && this.remaining != 0){
         let ancientDices = this.$store.state.dices;
         let savedDices = this.$store.state.dicesSaved;
         
         let removedDice = savedDices.splice(savedDices.indexOf(this.number),1);
-        savedDices.push(0);
-
         ancientDices.push(this.number);
 
         this.$store.commit('updateDices', ancientDices);

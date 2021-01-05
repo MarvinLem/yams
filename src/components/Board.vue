@@ -3,6 +3,7 @@
     <RemainingThrow/>
     <DicesSaved :showEmpty="true"/>
     <DicesReplay :rolling="rolling" :showEmpty="false"/>
+    <CheckScoreboard v-if="remaining == 0"/>
     <DicesActions :rolling="rolling"/>
   </div>
 </template>
@@ -11,6 +12,7 @@
 import RemainingThrow from '@/components/RemainingThrow.vue';
 import DicesSaved from '@/components/DicesSaved.vue';
 import DicesReplay from '@/components/DicesReplay.vue';
+import CheckScoreboard from '@/components/CheckScoreboard.vue';
 import DicesActions from '@/components/DicesActions.vue';
 
 export default {
@@ -19,12 +21,16 @@ export default {
     RemainingThrow,
     DicesSaved,
     DicesReplay,
+    CheckScoreboard,
     DicesActions
   },
   computed: {
     rolling () {
       return this.$store.state.rolling
-    }
+    },
+    remaining () {
+      return this.$store.state.remaining
+    },
   }
 };
 </script>

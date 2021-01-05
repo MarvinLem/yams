@@ -1,6 +1,6 @@
 <template>
-  <div class="dices-replay">
-    <Dice v-for="(dice, index) in dices" :key="index + '-' + dice"  :number="dice" :showEmpty="showEmpty" :rolling="rolling" state="replayable"/>
+  <div :key="key" class="dices-replay">
+    <Dice v-for="(dice, index) in dices" :key="index + '-' + dice" :number="dice" :showEmpty="showEmpty" :rolling="rolling" state="replayable"/>
   </div>
 </template>
 
@@ -12,6 +12,11 @@ export default {
   components: {
     Dice
   },
+  data () {
+    return {
+      key: 1
+    }
+  },
   props: {
     showEmpty: Boolean,
     rolling: Boolean,
@@ -20,6 +25,11 @@ export default {
     dices () {
       return this.$store.state.dices
     },
+  },
+  watch: {
+    dices () {
+      this.key = Math.random(50);
+    }
   }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="dices-saved">
-    <Dice v-for="(dice, index) in dicesSaved" :key="index + '-' + dice" :number="dice" :showEmpty="showEmpty" state="saved"/>
+    <Dice v-for="index in 5" :key="index + '-' + dicesSaved[index-1]" :number="dicesSaved[index-1]" :showEmpty="showEmpty" state="saved"/>
   </div>
 </template>
 
