@@ -7,13 +7,14 @@ export default new Vuex.Store({
   state: {
     rolling: false,
     scoring: false,
+    isStarted: false,
     isEnded: false,
-    players: [{name: 'Marvin'},{name: 'Autre'}],
+    players: [{name: 'Marvin'}],
     currentPlayer: 1,
     dices: [3,3,3,2,2],
     dicesSaved: [],
     remaining: 3,
-    remainingTurn: 1,
+    remainingTurn: 12,
     scoreRows: [
       {color: 'first-dark',name: 'Total des 1',image: 'dice-1', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
       {color: 'dark',name: 'Total des 2',image: 'dice-2', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     },
     updateScoring(state, scoring){
       state.scoring = scoring
+    },
+    updateIsStarted(state, isStarted){
+      state.isStarted = isStarted
     },
     updateIsEnded(state, isEnded){
       state.isEnded = isEnded

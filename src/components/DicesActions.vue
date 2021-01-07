@@ -1,7 +1,7 @@
 <template>
   <div class="dices-actions">
     <div v-if="!rolling && dices.length > 0 && remaining > 0" class="button" @click="shakeDices()">Melanger</div>
-    <div v-if="!rolling && remaining != 0 && remaining != 3" class="button" @click="endSerie()">Terminer la série</div>
+    <div v-if="!rolling && remaining != 0 && dicesSaved.length == 5" class="button" @click="endSerie()">Terminer la série</div>
     <div v-if="rolling" class="button" @click="launchDices()">Lancer</div>
   </div>
 </template>

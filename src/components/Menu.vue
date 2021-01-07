@@ -1,23 +1,22 @@
 <template>
-  <div class="results">
-    <p v-if="winner" class="text">{{winner}} remporte la partie avec {{score}} points !!!</p>
-    <p v-else class="text">Egalité avec {{score}} !</p>
-    <div class="start" @click="restartGame()">
+  <div class="menu">
+    <div class="start" @click="startGame()">
       <img class="image" :src="require('@/assets/dice.png')"/>
-      <h2 class="title">Refaire une partie</h2>
+      <h2 class="title">Demarrer la partie</h2>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Results',
-  props: {
-    winner: String,
-    score: Number
+  name: 'Menu',
+  computed: {
+    players(){
+      return this.$store.state.players
+    }
   },
   methods: {
-    restartGame(){
+    startGame(){
       let players = this.players.length;
       let defaultTotalScores = [];
       let defaultScoreRows = [
@@ -35,22 +34,22 @@ export default {
         {color: 'dark',name: 'Yam', scores: [], potentialScores: []},
       ];
       for(let i=0;i<players;i++){
-        defaultScoreRow[i].scores.push(undefined);
-        defaultScoreRow[i].potentialScores.push(undefined);
+        defaultScoreRows[i].scores.push(undefined);
+        defaultScoreRows[i].potentialScores.push(undefined);
         defaultTotalScores.push(0);
       }
       this.$store.commit('updateRemaining', 3);
       this.$store.commit('updateRemainingTurn', 12);
       this.$store.commit('updateScoreRows', defaultScoreRows)
       this.$store.commit('updateTotalScores', defaultTotalScores)
-      this.$store.commit('updateIsEnded', false);
+      this.$store.commit('updateIsStarted', true);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  .results{
+  .menu{
     display: inline-block;
     vertical-align: top;
     width: calc(75% - 12px);
@@ -58,16 +57,6 @@ export default {
     border-radius: 20px;
     background-color: #36393F;
     position: relative;
-    .text{
-      color: white;
-      font-size: 1.5em;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      text-align: center;
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translateY(-50%) translateX(-50%);
-    }
     .start{
       width: 200px;
       height: 200px;
@@ -75,7 +64,7 @@ export default {
       border-radius: 20px;
       background-color: #2C2F33;
       position: absolute;
-      top: 55%;
+      top: 48%;
       left: 50%;
       transform: translateX(-50%) translateY(-50%);
       cursor: pointer;

@@ -1,8 +1,9 @@
 <template>
   <div class="yams">
     <Scoreboard/>
-    <Board v-if="!isEnded"/>
-    <Results v-else :winner="winner" :score="score"/>
+    <Board v-if="!isEnded && isStarted"/>
+    <Menu v-if="!isStarted"/>
+    <Results v-if="isEnded" :winner="winner" :score="score"/>
   </div>
 </template>
 
@@ -10,17 +11,22 @@
 import Scoreboard from '@/components/Scoreboard.vue';
 import Board from '@/components/Board.vue';
 import Results from '@/components/Results.vue';
+import Menu from '@/components/Menu.vue';
 
 export default {
   name: 'Yams',
   components: {
     Scoreboard,
     Board,
-    Results
+    Results,
+    Menu
   },
   computed: {
     isEnded() {
       return this.$store.state.isEnded;
+    },
+    isStarted() {
+      return this.$store.state.isStarted;
     },
     players(){
       return this.$store.state.players;
@@ -32,8 +38,18 @@ export default {
       return Math.max(...this.totalScores);
     },
     winner(){
-      let index = this.totalScores.indexOf(this.score);
-      return this.players[index].name;
+      let checkDraw = 0;
+      for(let i=0;i<this.totalScores.length;i++){
+        if(this.totalScores[i] == this.score){
+          checkDraw++
+        };
+      }
+      if(checkDraw > 1){
+        return;
+      } else {
+        let index = this.totalScores.indexOf(this.score);
+        return this.players[index].name;
+      }
     }
   }
 };
