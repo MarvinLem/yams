@@ -1,9 +1,9 @@
 <template>
-  <div class="scoreboard">
+  <div :key="key" class="scoreboard">
     <RemainingTurn/>
-    <PlayersList :players="players" />
-    <RowsWithScore v-for="(row,index) in rowsScore" :key="index + ' ' + row.name" :color="row.color" :image="row.image" :name="row.name" :scores="row.score" :potentialScores="row.potentialScores"/>
-    <TotalScore :totalScores="[122,210]"/>
+    <PlayersList :players="players" :currentPlayer="currentPlayer" />
+    <RowsWithScore v-for="(row,index) in rowsScore" :key="index + ' ' + row.name" :index="index" :color="row.color" :image="row.image" :name="row.name" :scores="row.scores" :potentialScores="row.potentialScores"/>
+    <TotalScore :totalScores="totalScores"/>
   </div>
 </template>
 
@@ -21,12 +21,31 @@ export default {
     PlayersList,
     TotalScore
   },
+  data() {
+    return{
+      key: 2394,
+    }
+  },
   computed: {
     rowsScore() {
       return this.$store.state.scoreRows;
     },
     players() {
       return this.$store.state.players;
+    },
+    currentPlayer() {
+      return this.$store.state.currentPlayer;
+    },
+    scoring() {
+      return this.$store.state.scoring
+    },
+    totalScores(){
+      return this.$store.state.totalScores
+    }
+  },
+  watch: {
+    scoring() {
+      this.key = Math.random(5);
     }
   }
 };

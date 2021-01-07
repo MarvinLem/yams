@@ -34,7 +34,7 @@ export default {
       }
     },
     changeState(){
-      if(this.state == "replayable" && this.rolling == false){
+      if(this.state == "replayable" && this.rolling == false && this.remaining != 3){
         let ancientDices = this.$store.state.dices;
         let savedDices = this.$store.state.dicesSaved;
         

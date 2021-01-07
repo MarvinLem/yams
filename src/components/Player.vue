@@ -1,6 +1,6 @@
 <template>
   <div class="player">
-    <p class="name">{{name}}</p>
+    <p :class="currentPlayer ? 'name name--active' : 'name'">{{name}}</p>
   </div>
 </template>
 
@@ -9,6 +9,7 @@ export default {
   name: 'Player',
   props: {
     name: String,
+    currentPlayer: Boolean
   },
 };
 </script>
@@ -21,6 +22,9 @@ export default {
       font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       color: white;
       font-size: 1.1em;
+      &--active{
+        color: goldenrod;
+      }
     }
   }
 </style>

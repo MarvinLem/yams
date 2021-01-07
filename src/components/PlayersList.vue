@@ -1,6 +1,6 @@
 <template>
   <div class="players-list">
-    <Player :key="player + index" v-for="(player, index) in players" :name="player.name"/>
+    <Player :currentPlayer="currentPlayer == index+1 ? true : false" :key="player + index" v-for="(player, index) in players" :name="player.name"/>
   </div>
 </template>
 
@@ -14,6 +14,7 @@ export default {
   },
   props: {
     players: Array,
+    currentPlayer: Number
   },
 };
 </script>

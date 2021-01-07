@@ -4,8 +4,9 @@
       <img class="image" v-if="image" :src="require('@/assets/' + image + '.png')"/>
       <p class="name">{{name}}</p>
     </div>
-    <div class="score" :key="index + '' + score" v-for="(score, index) in potentialScores">
-      <p class="number">{{score}}</p>
+    <div v-for="(player, index) in players.length" class="score" :key="index + '' + potentialScores[index]">
+      <p v-if="scores[index] != undefined" class="number number--light">{{scores[index]}}</p>
+      <p v-else @click="updateScore()" class="number">{{potentialScores[index]}}</p>
     </div>
   </div>
 </template>
@@ -18,7 +19,8 @@ export default {
     image: String, 
     name: String,
     scores: Array,
-    potentialScores: Array
+    potentialScores: Array,
+    index: Number
   },
   computed:{
     dicesSaved() {
@@ -27,7 +29,59 @@ export default {
     remaining() {
       return this.$store.state.remaining;
     },
+    remainingTurn(){
+      return this.$store.state.remainingTurn;
+    },
+    players(){
+      return this.$store.state.players;
+    },
+    scoring(){
+      return this.$store.state.scoring;
+    },
+    currentPlayer(){
+      return this.$store.state.currentPlayer;
+    },
+    scoreRows(){
+      return this.$store.state.scoreRows;
+    }
   },
+  methods: {
+    updateScore(){
+      if(this.scoring == true){
+        let newScoreRows = this.scoreRows;
+        newScoreRows[this.index].scores[this.currentPlayer-1] = this.potentialScores[this.currentPlayer-1];
+        for(let i=0;i<newScoreRows.length;i++){
+          newScoreRows[i].potentialScores = [undefined,undefined];
+        }
+        this.$store.commit('updateScores', newScoreRows);
+        this.$store.commit('updateScoring', false);
+        this.$store.commit('updateDices', this.dicesSaved);
+        this.$store.commit('updateDicesSaved', []);
+        this.$store.commit('updateRemaining', 3);
+        this.updateTotalScore();
+        if(this.currentPlayer + 1 > this.players.length){
+          this.$store.commit('updateCurrentPlayer', 1);
+          this.remainingTurn > 1 ? this.$store.commit('updateRemainingTurn', this.remainingTurn - 1) : this.$store.commit('updateIsEnded', true)
+        } else {
+          this.$store.commit('updateCurrentPlayer', this.currentPlayer + 1);
+        }
+      }
+    },
+    updateTotalScore(){
+      let newTotalScores = [];
+      let newTotalScore = 0;
+      for(let c=0;c<this.players.length;c++){
+        for(let i=0;i<this.scoreRows.length;i++){
+          if(this.scoreRows[i].scores[c] != undefined){
+            newTotalScore += this.scoreRows[i].scores[c];
+          }
+        }
+        newTotalScores.push(newTotalScore);
+        newTotalScore = 0
+      }
+      this.$store.commit('updateTotalScores', newTotalScores);
+    }
+  }
 };
 </script>
 
@@ -61,10 +115,15 @@ export default {
       flex-basis: 50px;
       margin-left: 20px;
       .number{
+        cursor: pointer;
         margin: 0;
         font-weight: bold;
-        font-size: 1.1em;
+        font-size: 1em;
         text-align: center;
+        opacity: 0.6;
+      }
+      .number--light{
+        opacity: 1;
       }
       &:last-of-type{
         margin-right: 20px;
