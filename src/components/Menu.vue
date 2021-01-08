@@ -20,18 +20,19 @@ export default {
       let players = this.players.length;
       let defaultTotalScores = [];
       let defaultScoreRows = [
-        {color: 'first-dark',name: 'Total des 1',image: 'dice-1', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 2',image: 'dice-2', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 3',image: 'dice-3', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 4',image: 'dice-4', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 5',image: 'dice-5', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 6',image: 'dice-6', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Chance', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Carre', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Full', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Petite suite', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Grande suite', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Yam', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'first-dark',name: 'Total des 1',image: 'dice-1', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 2',image: 'dice-2', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 3',image: 'dice-3', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 4',image: 'dice-4', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 5',image: 'dice-5', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 6',image: 'dice-6', scores: [], potentialScores: []},
+        {component: 'RowsSixtyThree',color: 'dark'},
+        {component: 'RowsWithScore',color: 'dark',name: 'Chance', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Carre', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Full', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Petite suite', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Grande suite', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Yam', scores: [], potentialScores: []},
       ];
       for(let i=0;i<players;i++){
         defaultScoreRows[i].scores.push(undefined);
@@ -39,7 +40,7 @@ export default {
         defaultTotalScores.push(0);
       }
       this.$store.commit('updateRemaining', 3);
-      this.$store.commit('updateRemainingTurn', 12);
+      this.$store.commit('updateRemainingTurn', 1);
       this.$store.commit('updateScoreRows', defaultScoreRows)
       this.$store.commit('updateTotalScores', defaultTotalScores)
       this.$store.commit('updateIsStarted', true);

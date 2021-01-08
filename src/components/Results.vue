@@ -1,7 +1,10 @@
 <template>
   <div class="results">
-    <p v-if="winner" class="text">{{winner}} remporte la partie avec {{score}} points !!!</p>
-    <p v-else class="text">Egalité avec {{score}} !</p>
+    <div class="ranking" v-for="(rank, index) in ranking" :key="index + '' + rank.name">
+      <p class="position">{{index == 0 ? index+1 + 'er' : index+1 + 'eme'}}</p>
+      <p class="name">{{rank.name}}</p>
+      <p class="score">{{rank.score}} points</p>
+    </div>
     <div class="start" @click="restartGame()">
       <img class="image" :src="require('@/assets/dice.png')"/>
       <h2 class="title">Refaire une partie</h2>
@@ -12,31 +15,62 @@
 <script>
 export default {
   name: 'Results',
-  props: {
-    winner: String,
-    score: Number
+  computed: {
+    players(){
+      return this.$store.state.players
+    },
+    totalScores(){
+      return this.$store.state.totalScores;
+    },
+    ranking(){
+      /*
+      let checkDraw = 0;
+      for(let i=0;i<this.totalScores.length;i++){
+        if(this.totalScores[i] == this.score){
+          checkDraw++
+        };
+      }
+      if(checkDraw > 1){
+        return;
+      } else {
+        let index = this.totalScores.indexOf(this.score);
+        return this.players[index].name;
+      }
+      */
+      let rankingArray = [];
+      let scores = [...this.totalScores];
+      for(let i=0;i<this.players.length;i++){
+        let currentMax = Math.max(...scores);
+        let index = scores.indexOf(currentMax);
+        let name = this.players[index].name
+        rankingArray.push({name: name,score: currentMax});
+        scores.splice(index, 1, -1);
+      }
+      return rankingArray;
+    }
   },
   methods: {
     restartGame(){
       let players = this.players.length;
       let defaultTotalScores = [];
       let defaultScoreRows = [
-        {color: 'first-dark',name: 'Total des 1',image: 'dice-1', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 2',image: 'dice-2', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 3',image: 'dice-3', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 4',image: 'dice-4', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 5',image: 'dice-5', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Total des 6',image: 'dice-6', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Chance', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Carre', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Full', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Petite suite', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Grande suite', scores: [], potentialScores: []},
-        {color: 'dark',name: 'Yam', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'first-dark',name: 'Total des 1',image: 'dice-1', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 2',image: 'dice-2', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 3',image: 'dice-3', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 4',image: 'dice-4', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 5',image: 'dice-5', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Total des 6',image: 'dice-6', scores: [], potentialScores: []},
+        {component: 'RowsSixtyThree',color: 'dark'},
+        {component: 'RowsWithScore',color: 'dark',name: 'Chance', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Carre', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Full', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Petite suite', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Grande suite', scores: [], potentialScores: []},
+        {component: 'RowsWithScore',color: 'dark',name: 'Yam', scores: [], potentialScores: []},
       ];
       for(let i=0;i<players;i++){
-        defaultScoreRow[i].scores.push(undefined);
-        defaultScoreRow[i].potentialScores.push(undefined);
+        defaultScoreRows[i].scores.push(undefined);
+        defaultScoreRows[i].potentialScores.push(undefined);
         defaultTotalScores.push(0);
       }
       this.$store.commit('updateRemaining', 3);
@@ -99,6 +133,29 @@ export default {
         .title{
           font-size: 1.6em;
         }
+      }
+    }
+    .ranking{
+      width: 200px;
+      height: 200px;
+      display: inline-block;
+      margin: 20px;
+      border-radius: 20px;
+      background-color: #2C2F33;
+      color: white;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      text-align: center;
+      .position{
+        font-size: 2em;
+        margin: 50px 0 30px;
+      }
+      .name{
+        font-size: 1.5em;
+        margin: 0 0 10px 0;
+      }
+      .score{
+        font-size: 1.2em;
+        margin: 0;
       }
     }
   }

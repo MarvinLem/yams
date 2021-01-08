@@ -69,15 +69,27 @@ export default {
     },
     updateTotalScore(){
       let newTotalScores = [];
+      let sixtyThreeBonus = 0;
       let newTotalScore = 0;
       for(let c=0;c<this.players.length;c++){
         for(let i=0;i<this.scoreRows.length;i++){
-          if(this.scoreRows[i].scores[c] != undefined){
+          if(this.scoreRows[i].scores == undefined){
+
+          } else if(this.scoreRows[i].scores[c] != undefined){
             newTotalScore += this.scoreRows[i].scores[c];
           }
         }
+        for(let i=0;i<6;i++){
+          if(this.scoreRows[i].scores[c] != undefined){
+            sixtyThreeBonus += this.scoreRows[i].scores[c];
+          }
+        }
+        if(sixtyThreeBonus >= 63){
+          newTotalScore += 35;
+        }
         newTotalScores.push(newTotalScore);
-        newTotalScore = 0
+        newTotalScore = 0;
+        sixtyThreeBonus = 0;
       }
       this.$store.commit('updateTotalScores', newTotalScores);
     }
@@ -90,7 +102,7 @@ export default {
     display: flex;
     width: calc(100% - 40px);
     margin-left: 20px;
-    padding: 12px 0;
+    padding: 10px 0;
     border-bottom: 1px solid white;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: white;

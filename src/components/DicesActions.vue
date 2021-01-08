@@ -78,7 +78,7 @@ export default {
       for(let i=0;i<this.dicesSaved.length;i++){
         score += this.dicesSaved[i];
       }
-      newScoreRows[6].potentialScores[this.currentPlayer - 1] = score;
+      newScoreRows[7].potentialScores[this.currentPlayer - 1] = score;
       //Carre
       let sameNumber = 0;
       score = 0;
@@ -92,11 +92,11 @@ export default {
           for(let b=0;b<this.dicesSaved.length;b++){
             score += this.dicesSaved[b];
           }
-          newScoreRows[7].potentialScores[this.currentPlayer - 1] = score;
+          newScoreRows[8].potentialScores[this.currentPlayer - 1] = score;
         }
         sameNumber = 0;
       }
-      if(newScoreRows[7].potentialScores[this.currentPlayer - 1] == undefined) newScoreRows[7].potentialScores[this.currentPlayer - 1] = 0
+      if(newScoreRows[8].potentialScores[this.currentPlayer - 1] == undefined) newScoreRows[8].potentialScores[this.currentPlayer - 1] = 0
       //Full
       sameNumber = 0;
       let sameFirstNumber = 0;
@@ -117,9 +117,9 @@ export default {
         sameNumber = 0;
       }
       if(sameFirstNumber != 0 && sameSecondNumber !=0){
-        newScoreRows[8].potentialScores[this.currentPlayer - 1] = 3*sameFirstNumber + 2*sameSecondNumber;
+        newScoreRows[9].potentialScores[this.currentPlayer - 1] = 3*sameFirstNumber + 2*sameSecondNumber;
       } else {
-        newScoreRows[8].potentialScores[this.currentPlayer - 1] = score;
+        newScoreRows[9].potentialScores[this.currentPlayer - 1] = score;
       }
       //Petite Suite
       score = 0;
@@ -130,7 +130,7 @@ export default {
       } else if(this.dicesSaved.includes(3) && this.dicesSaved.includes(4) && this.dicesSaved.includes(5) && this.dicesSaved.includes(6)){
         score = 15;
       }
-      newScoreRows[9].potentialScores[this.currentPlayer - 1] = score;
+      newScoreRows[10].potentialScores[this.currentPlayer - 1] = score;
       //Grande Suite
       score = 0;
       if(this.dicesSaved.includes(1) && this.dicesSaved.includes(2) && this.dicesSaved.includes(3) && this.dicesSaved.includes(4) && this.dicesSaved.includes(5)){
@@ -138,7 +138,7 @@ export default {
       } else if(this.dicesSaved.includes(2) && this.dicesSaved.includes(3) && this.dicesSaved.includes(4) && this.dicesSaved.includes(5) && this.dicesSaved.includes(6)){
         score = 30;
       }
-      newScoreRows[10].potentialScores[this.currentPlayer - 1] = score;
+      newScoreRows[11].potentialScores[this.currentPlayer - 1] = score;
       //Yam
       sameNumber = 0;
       score = 0;
@@ -149,11 +149,11 @@ export default {
           }
         }
         if(sameNumber >= 5) {
-          newScoreRows[11].potentialScores[this.currentPlayer - 1] = 50;
+          newScoreRows[12].potentialScores[this.currentPlayer - 1] = 50;
         }
         sameNumber = 0;
       }
-      if(newScoreRows[11].potentialScores[this.currentPlayer - 1] == undefined) newScoreRows[11].potentialScores[this.currentPlayer - 1] = 0;
+      if(newScoreRows[12].potentialScores[this.currentPlayer - 1] == undefined) newScoreRows[12].potentialScores[this.currentPlayer - 1] = 0;
       this.$store.commit('updatePotentialScores', newScoreRows);
     }
   }

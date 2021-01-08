@@ -3,7 +3,7 @@
     <Scoreboard/>
     <Board v-if="!isEnded && isStarted"/>
     <Menu v-if="!isStarted"/>
-    <Results v-if="isEnded" :winner="winner" :score="score"/>
+    <Results v-if="isEnded"/>
   </div>
 </template>
 
@@ -34,23 +34,6 @@ export default {
     totalScores(){
       return this.$store.state.totalScores;
     },
-    score(){
-      return Math.max(...this.totalScores);
-    },
-    winner(){
-      let checkDraw = 0;
-      for(let i=0;i<this.totalScores.length;i++){
-        if(this.totalScores[i] == this.score){
-          checkDraw++
-        };
-      }
-      if(checkDraw > 1){
-        return;
-      } else {
-        let index = this.totalScores.indexOf(this.score);
-        return this.players[index].name;
-      }
-    }
   }
 };
 </script>
