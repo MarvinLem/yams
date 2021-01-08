@@ -12,6 +12,9 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 export default {
   name: 'RowsWithScore',
   props: {
@@ -22,52 +25,71 @@ export default {
     potentialScores: Array,
     index: Number
   },
+  data(){
+    return{
+      db: firebase.firestore()
+    }
+  },
   computed:{
     dicesSaved() {
-      return this.$store.state.dicesSaved;
+      return this.$store.state.yams.dicesSaved;
     },
     remaining() {
-      return this.$store.state.remaining;
+      return this.$store.state.yams.remaining;
     },
     remainingTurn(){
-      return this.$store.state.remainingTurn;
+      return this.$store.state.yams.remainingTurn;
     },
     players(){
-      return this.$store.state.players;
+      return this.$store.state.yams.players;
     },
     scoring(){
-      return this.$store.state.scoring;
+      return this.$store.state.yams.scoring;
     },
     currentPlayer(){
-      return this.$store.state.currentPlayer;
+      return this.$store.state.yams.currentPlayer;
     },
     scoreRows(){
-      return this.$store.state.scoreRows;
+      return this.$store.state.yams.scoreRows;
     }
   },
   methods: {
-    updateScore(){
+    async updateScore(){
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
       if(this.scoring == true){
         let newScoreRows = this.scoreRows;
         newScoreRows[this.index].scores[this.currentPlayer-1] = this.potentialScores[this.currentPlayer-1];
         for(let i=0;i<newScoreRows.length;i++){
-          newScoreRows[i].potentialScores = [undefined,undefined];
+          newScoreRows[i].potentialScores = [null,null];
         }
-        this.$store.commit('updateScores', newScoreRows);
-        this.$store.commit('updateScoring', false);
-        this.$store.commit('updateDices', this.dicesSaved);
-        this.$store.commit('updateDicesSaved', []);
-        this.$store.commit('updateRemaining', 3);
+        await yamsCollection.update({
+          remaining: 3,
+          dices: this.dicesSaved,
+          dicesSaved: [],
+          scoring: false,
+          scoreRows: newScoreRows
+        });
         this.updateTotalScore();
         if(this.currentPlayer + 1 > this.players.length){
-          this.$store.commit('updateCurrentPlayer', 1);
-          this.remainingTurn > 1 ? this.$store.commit('updateRemainingTurn', this.remainingTurn - 1) : this.$store.commit('updateIsEnded', true)
+          await yamsCollection.update({
+            currentPlayer: 1
+          });
+          this.remainingTurn > 1 ? 
+          await yamsCollection.update({
+            remainingTurn: this.remainingTurn - 1
+          }) : 
+          await yamsCollection.update({
+            isEnded: true
+          })
         } else {
-          this.$store.commit('updateCurrentPlayer', this.currentPlayer + 1);
+          await yamsCollection.update({
+            currentPlayer: this.currentPlayer + 1
+          });
         }
       }
     },
-    updateTotalScore(){
+    async updateTotalScore(){
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
       let newTotalScores = [];
       let sixtyThreeBonus = 0;
       let newTotalScore = 0;
@@ -91,7 +113,9 @@ export default {
         newTotalScore = 0;
         sixtyThreeBonus = 0;
       }
-      this.$store.commit('updateTotalScores', newTotalScores);
+      await yamsCollection.update({
+        totalScores: newTotalScores
+      })
     }
   }
 };

@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     dicesSaved() {
-      return this.$store.state.dicesSaved
+      return this.$store.state.yams.dicesSaved
     },
   }
 };

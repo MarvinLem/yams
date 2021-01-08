@@ -7,63 +7,87 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 export default {
   name: 'DicesActions',
   props: {
     rolling: Boolean
   },
+  data(){
+    return {
+      db: firebase.firestore()
+    }
+  },
   computed: {
     dices () {
-      return this.$store.state.dices;
+      return this.$store.state.yams.dices;
     },
     dicesSaved () {
-      return this.$store.state.dicesSaved;
+      return this.$store.state.yams.dicesSaved;
     },
     remaining () {
-      return this.$store.state.remaining;
+      return this.$store.state.yams.remaining;
     },
     remainingTurn () {
-      return this.$store.state.remainingTurn;
+      return this.$store.state.yams.remainingTurn;
     },
     scoreRows() {
-      return this.$store.state.scoreRows;
+      return this.$store.state.yams.scoreRows;
     },
     currentPlayer() {
-      return this.$store.state.currentPlayer;
+      return this.$store.state.yams.currentPlayer;
     }
   },
   methods: {
-    shakeDices(){
-      this.$store.commit('updateRolling', true);
+    async shakeDices(){
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+      await yamsCollection.update({
+        rolling: true
+      });
     },
-    updateScoring() {
-      this.$store.commit('updateScoring', true);
+    async updateScoring() {
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+      await yamsCollection.update({
+        scoring: true
+      });
     },
-    endSerie(){
-      this.$store.commit('updateDicesSaved', this.dicesSaved.concat(this.dices));
-      this.$store.commit('updateDices', []);
-      this.$store.commit('updateRemaining', 0);
+    async endSerie(){
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+      await yamsCollection.update({
+        dicesSaved: this.dicesSaved.concat(this.dices),
+        dices: [],
+        remaining: 0
+      });
       this.updatePotentialScores();
       this.updateScoring();
     },
-    launchDices(){
-      this.$store.commit('updateRolling', false);
+    async launchDices(){
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+      await yamsCollection.update({
+        rolling: false
+      });
       let newDices = [];
       for(let i=0;i<this.dices.length;i++){
         newDices.push(Math.floor(Math.random() * Math.floor(6) + 1))
       }
-      this.$store.commit('updateDices', newDices);
-      this.$store.commit('updateRemaining', this.remaining - 1);
+      await yamsCollection.update({
+        dices: newDices,
+        remaining: this.remaining - 1
+      });
       if(this.remaining == 0){
-        this.$store.commit('updateDicesSaved', this.$store.state.dicesSaved.concat(this.$store.state.dices));
-        this.$store.commit('updateDices', []);
-        this.$store.commit('updateRemaining', 0);
+        await yamsCollection.update({
+          dicesSaved: this.dicesSaved.concat(this.dices),
+          dices: [],
+          remaining: 0
+        });
         this.updatePotentialScores(); 
         this.updateScoring();
       }
     },
-    updatePotentialScores(){
-      let newScoreRows = this.scoreRows;
+    async updatePotentialScores(){
+      let newScoreRows = [...this.scoreRows];
       //Update for 'Total Of'
       let score = 0;
       for(let c=1;c<=6;c++){
@@ -154,7 +178,10 @@ export default {
         sameNumber = 0;
       }
       if(newScoreRows[12].potentialScores[this.currentPlayer - 1] == undefined) newScoreRows[12].potentialScores[this.currentPlayer - 1] = 0;
-      this.$store.commit('updatePotentialScores', newScoreRows);
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+      await yamsCollection.update({
+        scoreRows: newScoreRows
+      });
     }
   }
 };

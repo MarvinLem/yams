@@ -7,10 +7,14 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 export default {
   name: 'Dice',
   data() {
     return{
+      db: firebase.firestore(),
       changingNumber: 1,
       currentlyRolling: undefined,
     }
@@ -23,7 +27,13 @@ export default {
   },
   computed: {
     remaining() {
-      return this.$store.state.remaining
+      return this.$store.state.yams.remaining
+    },
+    dices() {
+      return this.$store.state.yams.dices
+    },
+    savedDices(){
+      return this.$store.state.yams.dicesSaved
     }
   },
   methods:{
@@ -33,26 +43,32 @@ export default {
         this.$refs.diceImage.src = require("@/assets/dice-" + this.changingNumber + ".png");
       }
     },
-    changeState(){
+    async changeState(){
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
       if(this.state == "replayable" && this.rolling == false && this.remaining != 3){
-        let ancientDices = this.$store.state.dices;
-        let savedDices = this.$store.state.dicesSaved;
+        let ancientDices = [...this.dices];
+        let savedDices = [...this.savedDices];
         
         let removedDice = ancientDices.splice(ancientDices.indexOf(this.number),1);
 
         savedDices.push(removedDice[0])
 
-        this.$store.commit('updateDices', ancientDices);
-        this.$store.commit('updateDicesSaved', savedDices);
+        await yamsCollection.update({
+          dices: ancientDices,
+          dicesSaved: savedDices,
+        });
       } else if(this.state == "saved" && this.rolling == false && this.remaining != 0){
-        let ancientDices = this.$store.state.dices;
-        let savedDices = this.$store.state.dicesSaved;
+        let ancientDices = [...this.dices];
+        let savedDices = [...this.savedDices];
         
         let removedDice = savedDices.splice(savedDices.indexOf(this.number),1);
+
         ancientDices.push(this.number);
 
-        this.$store.commit('updateDices', ancientDices);
-        this.$store.commit('updateDicesSaved', savedDices);
+        await yamsCollection.update({
+          dices: ancientDices,
+          dicesSaved: savedDices,
+        });
       }
     }
   },

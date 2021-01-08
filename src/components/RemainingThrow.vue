@@ -9,7 +9,7 @@ export default {
   name: 'RemainingThrow',
   computed: {
     remaining () {
-      return this.$store.state.remaining;
+      return this.$store.state.yams.remaining;
     },
   }
 };

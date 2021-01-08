@@ -27,10 +27,10 @@ export default {
   },
   computed:{
     players(){
-      return this.$store.state.players;
+      return this.$store.state.yams.players;
     },
     scoreRows(){
-      return this.$store.state.scoreRows;
+      return this.$store.state.yams.scoreRows;
     },
     scoresFromTotal(){
       let TotalScores = [];

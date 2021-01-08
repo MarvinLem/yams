@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     dices () {
-      return this.$store.state.dices
+      return this.$store.state.yams.dices
     },
   },
   watch: {

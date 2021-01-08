@@ -5,6 +5,7 @@
     <DicesReplay :rolling="rolling" :showEmpty="false"/>
     <CheckScoreboard v-if="remaining == 0"/>
     <DicesActions :rolling="rolling"/>
+    <RestartButton/>
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import DicesSaved from '@/components/DicesSaved.vue';
 import DicesReplay from '@/components/DicesReplay.vue';
 import CheckScoreboard from '@/components/CheckScoreboard.vue';
 import DicesActions from '@/components/DicesActions.vue';
+import RestartButton from '@/components/RestartButton.vue';
 
 export default {
   name: 'Board',
@@ -22,14 +24,15 @@ export default {
     DicesSaved,
     DicesReplay,
     CheckScoreboard,
-    DicesActions
+    DicesActions,
+    RestartButton
   },
   computed: {
     rolling () {
-      return this.$store.state.rolling
+      return this.$store.state.yams.rolling
     },
     remaining () {
-      return this.$store.state.remaining
+      return this.$store.state.yams.remaining
     },
   }
 };

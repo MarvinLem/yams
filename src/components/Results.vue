@@ -13,14 +13,22 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 export default {
   name: 'Results',
+  data(){
+    return {
+      db: firebase.firestore()
+    }
+  },
   computed: {
     players(){
-      return this.$store.state.players
+      return this.$store.state.yams.players
     },
     totalScores(){
-      return this.$store.state.totalScores;
+      return this.$store.state.yams.totalScores;
     },
     ranking(){
       /*
@@ -50,7 +58,7 @@ export default {
     }
   },
   methods: {
-    restartGame(){
+    async restartGame(){
       let players = this.players.length;
       let defaultTotalScores = [];
       let defaultScoreRows = [
@@ -69,15 +77,24 @@ export default {
         {component: 'RowsWithScore',color: 'dark',name: 'Yam', scores: [], potentialScores: []},
       ];
       for(let i=0;i<players;i++){
-        defaultScoreRows[i].scores.push(undefined);
-        defaultScoreRows[i].potentialScores.push(undefined);
+        defaultScoreRows[i].scores.push(null);
+        defaultScoreRows[i].potentialScores.push(null);
         defaultTotalScores.push(0);
       }
-      this.$store.commit('updateRemaining', 3);
-      this.$store.commit('updateRemainingTurn', 12);
-      this.$store.commit('updateScoreRows', defaultScoreRows)
-      this.$store.commit('updateTotalScores', defaultTotalScores)
-      this.$store.commit('updateIsEnded', false);
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+      await yamsCollection.update({
+        remaining: 3,
+        dices: [1,1,1,1,1],
+        dicesSaved: [],
+        remainingTurn: 12,
+        rolling: false,
+        scoring: false,
+        scoreRows: defaultScoreRows,
+        totalScores: defaultTotalScores,
+        isStarted: true,
+        isEnded: false,
+        currentPlayer: 1
+      });
     }
   }
 };

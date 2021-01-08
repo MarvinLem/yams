@@ -1,9 +1,5 @@
 <template>
-  <div class="menu">
-    <div class="start" @click="startGame()">
-      <img class="image" :src="require('@/assets/dice.png')"/>
-      <h2 class="title">Demarrer la partie</h2>
-    </div>
+  <div @click="restartGame()" class="restart-button">
   </div>
 </template>
 
@@ -12,19 +8,19 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 export default {
-  name: 'Menu',
+  name: 'RestartButton',
   data(){
     return {
       db: firebase.firestore()
     }
   },
-  computed: {
+  computed:{
     players(){
       return this.$store.state.yams.players
     }
   },
   methods: {
-    async startGame(){
+    async restartGame(){
       let players = 1;
       this.players != undefined ? players = this.players.length : players = 1
       let defaultTotalScores = [];
@@ -58,9 +54,9 @@ export default {
         scoring: false,
         scoreRows: defaultScoreRows,
         totalScores: defaultTotalScores,
-        isStarted: true,
+        isStarted: false,
         isEnded: false,
-        currentPlayer: 1,
+        currentPlayer: 1
       });
     }
   }
@@ -68,46 +64,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .menu{
+  .restart-button{
     display: inline-block;
-    vertical-align: top;
-    width: calc(75% - 12px);
-    height: calc(100vh - 24px);
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+    width: 20px;
+    height: 20px;
     border-radius: 20px;
-    background-color: #36393F;
-    position: relative;
-    .start{
-      width: 200px;
-      height: 200px;
-      margin: 0 20px;
-      border-radius: 20px;
-      background-color: #2C2F33;
-      position: absolute;
-      top: 48%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      cursor: pointer;
-      transition: 0.3s;
-      .title{
-        margin: 0;
-        color: white;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        text-align: center;
-        transition: 0.3s;
-      }
-      .image{
-        display: block;
-        width: 80%;
-        margin: 0 auto;
-        padding: 10px 0 0;
-      }
-      &:hover{
-        width: 220px;
-        height: 220px;
-        .title{
-          font-size: 1.6em;
-        }
-      }
-    }
+    background-color: #2C2F33;
+    cursor: pointer;
   }
 </style>

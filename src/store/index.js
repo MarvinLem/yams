@@ -5,72 +5,50 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    rolling: false,
-    scoring: false,
-    isStarted: false,
-    isEnded: false,
-    players: [{name: 'Marvin'},{name: 'Nicolas'}],
-    currentPlayer: 1,
-    dices: [3,3,3,2,2],
-    dicesSaved: [],
-    remaining: 3,
-    remainingTurn: 12,
-    scoreRows: [
-      {component: 'RowsWithScore',color: 'first-dark',name: 'Total des 1',image: 'dice-1', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Total des 2',image: 'dice-2', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Total des 3',image: 'dice-3', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Total des 4',image: 'dice-4', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Total des 5',image: 'dice-5', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Total des 6',image: 'dice-6', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsSixtyThree',color: 'dark'},
-      {component: 'RowsWithScore',color: 'dark',name: 'Chance', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Carre', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Full', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Petite suite', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Grande suite', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-      {component: 'RowsWithScore',color: 'dark',name: 'Yam', scores: [undefined,undefined], potentialScores: [undefined,undefined]},
-    ],
-    totalScores: [0,0]
+    yams: {}
   },
   mutations: {
+    updateYams(state, yams){
+      state.yams = yams
+    },
     updateRolling(state, rolling){
-      state.rolling = rolling
+      state.yams.rolling = rolling
     },
     updateScoring(state, scoring){
-      state.scoring = scoring
+      state.yams.scoring = scoring
     },
     updateIsStarted(state, isStarted){
-      state.isStarted = isStarted
+      state.yams.isStarted = isStarted
     },
     updateIsEnded(state, isEnded){
-      state.isEnded = isEnded
+      state.yams.isEnded = isEnded
     },
     updateDices(state, dices){
-      state.dices = dices
+      state.yams.dices = dices
     },
     updateDicesSaved(state, dices){
-      state.dicesSaved = dices
+      state.yams.dicesSaved = dices
     },
     updateRemaining(state, remaining){
-      state.remaining = remaining
+      state.yams.remaining = remaining
     },
     updateRemainingTurn(state, remainingTurn){
-      state.remainingTurn = remainingTurn
+      state.yams.remainingTurn = remainingTurn
     },
     updateScores(state, scores){
-      state.scores = scores
+      state.yams.scores = scores
     },
     updatePotentialScores(state, potentialScores){
-      state.potentialScores = potentialScores
+      state.yams.potentialScores = potentialScores
     },
     updateScoreRows(state, scoreRows){
-      state.scoreRows = scoreRows
+      state.yams.scoreRows = scoreRows
     },
     updateCurrentPlayer(state, currentPlayer){
-      state.currentPlayer = currentPlayer
+      state.yams.currentPlayer = currentPlayer
     },
     updateTotalScores(state, totalScores){
-      state.totalScores = totalScores
+      state.yams.totalScores = totalScores
     },
   },
   actions: {

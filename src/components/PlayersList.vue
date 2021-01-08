@@ -24,6 +24,7 @@ export default {
     display: flex;
     padding: 10px 0;
     margin-right: 40px;
+    min-height: 55px;
     width: calc(100% - 40px);
     justify-content: flex-end;
   }

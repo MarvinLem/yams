@@ -30,19 +30,19 @@ export default {
   },
   computed: {
     rowsScore() {
-      return this.$store.state.scoreRows;
+      return this.$store.state.yams.scoreRows;
     },
     players() {
-      return this.$store.state.players;
+      return this.$store.state.yams.players;
     },
     currentPlayer() {
-      return this.$store.state.currentPlayer;
+      return this.$store.state.yams.currentPlayer;
     },
     scoring() {
-      return this.$store.state.scoring
+      return this.$store.state.yams.scoring
     },
     totalScores(){
-      return this.$store.state.totalScores
+      return this.$store.state.yams.totalScores
     }
   },
   watch: {

@@ -10,7 +10,7 @@ export default {
   name: 'RemainingTurn',
   computed: {
     remainingTurn () {
-      return this.$store.state.remainingTurn;
+      return this.$store.state.yams.remainingTurn;
     },
   }
 };

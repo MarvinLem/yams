@@ -12,6 +12,8 @@ import Scoreboard from '@/components/Scoreboard.vue';
 import Board from '@/components/Board.vue';
 import Results from '@/components/Results.vue';
 import Menu from '@/components/Menu.vue';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 export default {
   name: 'Yams',
@@ -23,17 +25,30 @@ export default {
   },
   computed: {
     isEnded() {
-      return this.$store.state.isEnded;
+      return this.$store.state.yams.isEnded;
     },
     isStarted() {
-      return this.$store.state.isStarted;
+      return this.$store.state.yams.isStarted;
     },
     players(){
-      return this.$store.state.players;
+      return this.$store.state.yams.players;
     },
     totalScores(){
-      return this.$store.state.totalScores;
+      return this.$store.state.yams.totalScores;
     },
+  },
+  async mounted(){
+    const db = firebase.firestore()
+    const yamsCollection = db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+    const yams = await yamsCollection.get();
+    this.$store.commit('updateYams', yams.data());
+
+    const observer = yamsCollection.onSnapshot(async docSnapshot => {
+      const yams = await yamsCollection.get();
+      this.$store.commit('updateYams', yams.data());
+    }, err => {
+      console.log(`Encountered error: ${err}`);
+    });
   }
 };
 </script>
