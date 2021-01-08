@@ -11,7 +11,8 @@
     "build": "vue-cli-service build",
     "postinstall": "npm run build",
     "lint": "vue-cli-service lint",
-    "start": "node server.js"
+    "start": "node server.js",
+    "heroku-prebuild": "npm i sass-loader"
   },
   "dependencies": {
     "core-js": "^3.6.5",
