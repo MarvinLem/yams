@@ -22,7 +22,6 @@ export default {
   props: {
     number: Number,
     showEmpty: Boolean,
-    rolling: Boolean,
     state: String
   },
   computed: {
@@ -34,14 +33,19 @@ export default {
     },
     savedDices(){
       return this.$store.state.yams.dicesSaved
+    },
+    rolling() {
+      return this.$store.state.yams.rolling
     }
   },
   methods:{
     currentlyRoll(){
       this.changingNumber = Math.floor(Math.random() * Math.floor(6) + 1);
-      if(this.$refs.diceImage){
-        this.$refs.diceImage.src = require("@/assets/dice-" + this.changingNumber + ".png");
-      }
+      this.$nextTick(function() {
+        if(this.$refs.diceImage){
+          this.$refs.diceImage.src = require("@/assets/dice-" + this.changingNumber + ".png");
+        }
+      });
     },
     async changeState(){
       const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
@@ -72,15 +76,13 @@ export default {
       }
     }
   },
-  watch: {
-    rolling(){
-      if(this.rolling == true){
-        this.currentlyRolling = setInterval(() => {
-          this.currentlyRoll()}, 100
-        )
-      } else {
-        clearInterval(this.currentlyRolling)
-      }
+  mounted(){
+    if(this.rolling == true){
+      this.currentlyRolling = setInterval(() => {
+        this.currentlyRoll()}, 100
+      )
+    } else {
+      clearInterval(this.currentlyRolling)
     }
   }
 };
