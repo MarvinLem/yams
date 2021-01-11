@@ -1,17 +1,25 @@
 <template>
   <div class="home">
-    <GameSelector/>
+    <NameSelector/>
+    <GameSelector :pseudo="pseudo"/>
   </div>
 </template>
 
 <script>
 import GameSelector from '@/components/GameSelector.vue';
+import NameSelector from '@/components/NameSelector.vue';
 
 export default {
   name: 'Home',
   components: {
     GameSelector,
+    NameSelector
   },
+  computed: {
+    pseudo(){
+      return this.$store.state.pseudo
+    }
+  }
 };
 </script>
 

@@ -72,7 +72,8 @@ export default {
         this.updateTotalScore();
         if(this.currentPlayer + 1 > this.players.length){
           await yamsCollection.update({
-            currentPlayer: 1
+            currentPlayer: 1,
+            currentPlayerId: this.players[0].id
           });
           this.remainingTurn > 1 ? 
           await yamsCollection.update({
@@ -83,7 +84,8 @@ export default {
           })
         } else {
           await yamsCollection.update({
-            currentPlayer: this.currentPlayer + 1
+            currentPlayer: this.currentPlayer + 1,
+            currentPlayerId: this.players[this.currentPlayer].id
           });
         }
       }

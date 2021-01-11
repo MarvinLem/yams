@@ -93,7 +93,8 @@ export default {
         totalScores: defaultTotalScores,
         isStarted: true,
         isEnded: false,
-        currentPlayer: 1
+        currentPlayer: 1,
+        currentPlayerId: this.players[0].id
       });
     }
   }

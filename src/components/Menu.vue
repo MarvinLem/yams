@@ -61,6 +61,7 @@ export default {
         isStarted: true,
         isEnded: false,
         currentPlayer: 1,
+        currentPlayerId: this.players[0].id
       });
     }
   }
