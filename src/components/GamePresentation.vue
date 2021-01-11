@@ -40,7 +40,6 @@ export default {
         newPlayer = this.players;
       } else {
         newPlayer = [];
-        newPlayer.push({name: this.pseudo})
       }
       if(this.currentPlayer) {
         newCurrentPlayer = this.currentPlayer + 1;
@@ -51,7 +50,6 @@ export default {
 
       this.$session.start();
       this.$session.set('id',uid);
-      console.log(this.$session.get('id'));
 
       await yamsCollection.update({
         players: newPlayer,
