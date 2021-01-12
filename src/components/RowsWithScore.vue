@@ -68,7 +68,11 @@ export default {
           let newScoreRows = this.scoreRows;
           newScoreRows[this.index].scores[this.currentPlayer-1] = this.potentialScores[this.currentPlayer-1];
           for(let i=0;i<newScoreRows.length;i++){
-            newScoreRows[i].potentialScores = [null,null];
+            for(let c=0;c<this.players.length;c++){
+              if(newScoreRows[i].potentialScores != undefined){
+                newScoreRows[i].potentialScores[c] = null
+              }
+            }
           }
           await yamsCollection.update({
             remaining: 3,
@@ -106,14 +110,14 @@ export default {
       let newTotalScore = 0;
       for(let c=0;c<this.players.length;c++){
         for(let i=0;i<this.scoreRows.length;i++){
-          if(this.scoreRows[i].scores == undefined){
+          if(this.scoreRows[i].scores == null){
 
-          } else if(this.scoreRows[i].scores[c] != undefined){
+          } else if(this.scoreRows[i].scores[c] != null){
             newTotalScore += this.scoreRows[i].scores[c];
           }
         }
         for(let i=0;i<6;i++){
-          if(this.scoreRows[i].scores[c] != undefined){
+          if(this.scoreRows[i].scores[c] != null){
             sixtyThreeBonus += this.scoreRows[i].scores[c];
           }
         }
