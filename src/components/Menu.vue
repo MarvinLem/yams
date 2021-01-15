@@ -43,11 +43,19 @@ export default {
         {component: 'RowsWithScore',color: 'dark',name: 'Grande suite', scores: [], potentialScores: []},
         {component: 'RowsWithScore',color: 'dark',name: 'Yam', scores: [], potentialScores: []},
       ];
+
+      for (let c=0;c<defaultScoreRows.length;c++){
+        for(let i=0;i<players;i++){
+          if(defaultScoreRows[c].scores != undefined && defaultScoreRows[c].potentialScores != undefined){
+            defaultScoreRows[c].scores.push(null);
+            defaultScoreRows[c].potentialScores.push(null);
+          }
+        }
+      }
       for(let i=0;i<players;i++){
-        defaultScoreRows[i].scores.push(null);
-        defaultScoreRows[i].potentialScores.push(null);
         defaultTotalScores.push(0);
       }
+  
       const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
       await yamsCollection.update({
         remaining: 3,
@@ -61,6 +69,7 @@ export default {
         isStarted: true,
         isEnded: false,
         currentPlayer: 1,
+        currentPlayerId: this.players[0].id
       });
     }
   }

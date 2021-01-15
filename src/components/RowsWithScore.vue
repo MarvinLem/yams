@@ -31,6 +31,9 @@ export default {
     }
   },
   computed:{
+    uid() {
+      return this.$session.get('id');
+    },
     dicesSaved() {
       return this.$store.state.yams.dicesSaved;
     },
@@ -49,42 +52,54 @@ export default {
     currentPlayer(){
       return this.$store.state.yams.currentPlayer;
     },
+    currentPlayerId() {
+      return this.$store.state.yams.currentPlayerId;
+    },
     scoreRows(){
       return this.$store.state.yams.scoreRows;
     }
   },
   methods: {
     async updateScore(){
-      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
-      if(this.scoring == true){
-        let newScoreRows = this.scoreRows;
-        newScoreRows[this.index].scores[this.currentPlayer-1] = this.potentialScores[this.currentPlayer-1];
-        for(let i=0;i<newScoreRows.length;i++){
-          newScoreRows[i].potentialScores = [null,null];
-        }
-        await yamsCollection.update({
-          remaining: 3,
-          dices: this.dicesSaved,
-          dicesSaved: [],
-          scoring: false,
-          scoreRows: newScoreRows
-        });
-        this.updateTotalScore();
-        if(this.currentPlayer + 1 > this.players.length){
+      if(this.currentPlayerId == this.uid){
+
+        const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+        if(this.scoring == true){
+          let newScoreRows = this.scoreRows;
+          newScoreRows[this.index].scores[this.currentPlayer-1] = this.potentialScores[this.currentPlayer-1];
+          for(let i=0;i<newScoreRows.length;i++){
+            for(let c=0;c<this.players.length;c++){
+              if(newScoreRows[i].potentialScores != undefined){
+                newScoreRows[i].potentialScores[c] = null
+              }
+            }
+          }
           await yamsCollection.update({
-            currentPlayer: 1
+            remaining: 3,
+            dices: this.dicesSaved,
+            dicesSaved: [],
+            scoring: false,
+            scoreRows: newScoreRows
           });
-          this.remainingTurn > 1 ? 
-          await yamsCollection.update({
-            remainingTurn: this.remainingTurn - 1
-          }) : 
-          await yamsCollection.update({
-            isEnded: true
-          })
-        } else {
-          await yamsCollection.update({
-            currentPlayer: this.currentPlayer + 1
-          });
+          this.updateTotalScore();
+          if(this.currentPlayer + 1 > this.players.length){
+            await yamsCollection.update({
+              currentPlayer: 1,
+              currentPlayerId: this.players[0].id
+            });
+            this.remainingTurn > 1 ? 
+            await yamsCollection.update({
+              remainingTurn: this.remainingTurn - 1
+            }) : 
+            await yamsCollection.update({
+              isEnded: true
+            })
+          } else {
+            await yamsCollection.update({
+              currentPlayer: this.currentPlayer + 1,
+              currentPlayerId: this.players[this.currentPlayer].id
+            });
+          }
         }
       }
     },
@@ -95,14 +110,14 @@ export default {
       let newTotalScore = 0;
       for(let c=0;c<this.players.length;c++){
         for(let i=0;i<this.scoreRows.length;i++){
-          if(this.scoreRows[i].scores == undefined){
+          if(this.scoreRows[i].scores == null){
 
-          } else if(this.scoreRows[i].scores[c] != undefined){
+          } else if(this.scoreRows[i].scores[c] != null){
             newTotalScore += this.scoreRows[i].scores[c];
           }
         }
         for(let i=0;i<6;i++){
-          if(this.scoreRows[i].scores[c] != undefined){
+          if(this.scoreRows[i].scores[c] != null){
             sixtyThreeBonus += this.scoreRows[i].scores[c];
           }
         }

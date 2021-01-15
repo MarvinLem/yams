@@ -23,6 +23,11 @@ export default {
     Results,
     Menu
   },
+  data(){
+    return {
+      db: firebase.firestore()
+    }
+  },
   computed: {
     isEnded() {
       return this.$store.state.yams.isEnded;
@@ -36,10 +41,12 @@ export default {
     totalScores(){
       return this.$store.state.yams.totalScores;
     },
+    player(){
+      return this.$store.state.player;
+    }
   },
   async mounted(){
-    const db = firebase.firestore()
-    const yamsCollection = db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+    const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
     const yams = await yamsCollection.get();
     this.$store.commit('updateYams', yams.data());
 

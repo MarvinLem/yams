@@ -6,15 +6,55 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 export default {
   name: 'GamePresentation',
   props: {
     name: String,
     image: String,
-    link: String
+    link: String,
+    pseudo: String
+  },
+  data(){
+    return {
+      db: firebase.firestore()
+    }
+  },
+  computed: {
+    players(){
+      return this.$store.state.yams.players
+    },
+    currentPlayer(){
+      return this.$store.state.yams.currentPlayer
+    }
   },
   methods: {
-    redirect(link){
+    async redirect(link){
+      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+      let newPlayer;
+      let newCurrentPlayer;
+      let uid = Math.floor(Math.random() * 10000000000);
+      if(this.players) {
+        newPlayer = this.players;
+      } else {
+        newPlayer = [];
+      }
+      if(this.currentPlayer) {
+        newCurrentPlayer = this.currentPlayer + 1;
+      } else {
+        newCurrentPlayer = 1;
+      }
+      newPlayer.push({id: uid, name: this.pseudo})
+
+      this.$session.start();
+      this.$session.set('id',uid);
+
+      await yamsCollection.update({
+        players: newPlayer,
+        currentPlayer: newCurrentPlayer
+      });
       this.$router.push(link);
     }
   }

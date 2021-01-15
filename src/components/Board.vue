@@ -34,7 +34,7 @@ export default {
     remaining () {
       return this.$store.state.yams.remaining
     },
-  }
+  },
 };
 </script>
 

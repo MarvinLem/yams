@@ -1,13 +1,19 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VueSession from 'vue-session';
 
 Vue.use(Vuex);
+Vue.use(VueSession);
 
 export default new Vuex.Store({
   state: {
-    yams: {}
+    yams: {},
+    pseudo: ''
   },
   mutations: {
+    updatePseudo(state, pseudo){
+      state.pseudo = pseudo
+    },
     updateYams(state, yams){
       state.yams = yams
     },
