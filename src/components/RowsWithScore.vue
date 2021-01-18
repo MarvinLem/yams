@@ -159,12 +159,12 @@ export default {
         display: inline-block;
         width: 90px;
         margin: 0;
-        font-size: 0.9em;
+        font-size: 0.8em;
       }
     }
     .score{
       flex-basis: 50px;
-      margin-left: 20px;
+      margin-left: 10px;
       .number{
         cursor: pointer;
         margin: 0;

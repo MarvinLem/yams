@@ -1,11 +1,11 @@
 <template>
   <div class="results">
     <div class="ranking" v-for="(rank, index) in ranking" :key="index + '' + rank.name">
-      <p class="position">{{index == 0 ? index+1 + 'er' : index+1 + 'eme'}}</p>
-      <p class="name">{{rank.name}}</p>
-      <p class="score">{{rank.score}} points</p>
+      <p v-if="rank != undefined" class="position">{{rank.position == 1 ? rank.position + 'er' : rank.position + 'eme'}}</p>
+      <p v-if="rank != undefined" class="name">{{rank.name}}</p>
+      <p v-if="rank != undefined" class="score">{{rank.score}} points</p>
     </div>
-    <div class="start" @click="restartGame()">
+    <div class="start" @click="createNewGame()">
       <img class="image" :src="require('@/assets/dice.png')"/>
       <h2 class="title">Refaire une partie</h2>
     </div>
@@ -31,87 +31,55 @@ export default {
       return this.$store.state.yams.totalScores;
     },
     ranking(){
-      /*
-      let checkDraw = 0;
-      for(let i=0;i<this.totalScores.length;i++){
-        if(this.totalScores[i] == this.score){
-          checkDraw++
-        };
-      }
-      if(checkDraw > 1){
-        return;
-      } else {
-        let index = this.totalScores.indexOf(this.score);
-        return this.players[index].name;
-      }
-      */
       let rankingArray = [];
       let scores = [...this.totalScores];
+
+      let names = [];
+      for(let d=0;d<this.players.length;d++){
+        let name = this.players[d].name
+        names.push(name)
+      }
+
+      let position = 1;
+
+      let indexArray = [];
+
       for(let i=0;i<this.players.length;i++){
-        let currentMax = Math.max(...scores);
-        let index = scores.indexOf(currentMax);
-        let name = this.players[index].name
-        rankingArray.push({name: name,score: currentMax});
-        scores.splice(index, 1, -1);
+        if(scores.length > 0){
+          let currentMax = Math.max(...scores);
+
+          for(let c=0;c<scores.length;c++) {
+            if(scores[c] == currentMax) {
+              indexArray.push(c);
+            }
+          }
+
+          for(let b=0;b<indexArray.length;b++){
+            if(names[indexArray[b]] != undefined){
+              let name = names[indexArray[b]];
+              rankingArray.push({name: name,score: currentMax,position: position}); 
+            }
+          }
+
+          for(let b=0;b<indexArray.length;b++){
+            scores.splice(indexArray[b], 1, null); 
+          }
+          
+          position++
+          indexArray = [];
+        }
       }
       return rankingArray;
     }
   },
-  methods: {
-    async restartGame(){
-      let players = this.players.length;
-      let defaultTotalScores = [];
-      let defaultScoreRows = [
-        {component: 'RowsWithScore',color: 'first-dark',name: 'Total des 1',image: 'dice-1', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Total des 2',image: 'dice-2', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Total des 3',image: 'dice-3', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Total des 4',image: 'dice-4', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Total des 5',image: 'dice-5', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Total des 6',image: 'dice-6', scores: [], potentialScores: []},
-        {component: 'RowsSixtyThree',color: 'dark'},
-        {component: 'RowsWithScore',color: 'dark',name: 'Chance', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Carre', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Full', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Petite suite', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Grande suite', scores: [], potentialScores: []},
-        {component: 'RowsWithScore',color: 'dark',name: 'Yam', scores: [], potentialScores: []},
-      ];
-      for (let c=0;c<defaultScoreRows.length;c++){
-        for(let i=0;i<players;i++){
-          if(defaultScoreRows[c].scores != undefined && defaultScoreRows[c].potentialScores != undefined){
-            defaultScoreRows[c].scores.push(null);
-            defaultScoreRows[c].potentialScores.push(null);
-          }
-        }
-      }
-      for(let i=0;i<players;i++){
-        defaultTotalScores.push(0);
-      }
-      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
-      await yamsCollection.update({
-        remaining: 3,
-        dices: [1,1,1,1,1],
-        dicesSaved: [],
-        remainingTurn: 12,
-        rolling: false,
-        scoring: false,
-        scoreRows: defaultScoreRows,
-        totalScores: defaultTotalScores,
-        isStarted: true,
-        isEnded: false,
-        currentPlayer: 1,
-        currentPlayerId: this.players[0].id
-      });
-    }
-  }
 };
 </script>
 
 <style lang="scss" scoped>
   .results{
     display: inline-block;
+    flex-grow: 1;
     vertical-align: top;
-    width: calc(75% - 12px);
     height: calc(100vh - 24px);
     border-radius: 20px;
     background-color: #36393F;

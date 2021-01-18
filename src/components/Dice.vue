@@ -25,6 +25,9 @@ export default {
     state: String
   },
   computed: {
+    uid() {
+      return this.$session.get('id');
+    },
     remaining() {
       return this.$store.state.yams.remaining
     },
@@ -36,6 +39,9 @@ export default {
     },
     rolling() {
       return this.$store.state.yams.rolling
+    },
+    currentPlayerId() {
+      return this.$store.state.yams.currentPlayerId;
     }
   },
   methods:{
@@ -48,35 +54,46 @@ export default {
       });
     },
     async changeState(){
-      const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
-      if(this.state == "replayable" && this.rolling == false && this.remaining != 3){
-        let ancientDices = [...this.dices];
-        let savedDices = [...this.savedDices];
-        
-        let removedDice = ancientDices.splice(ancientDices.indexOf(this.number),1);
+      if(this.currentPlayerId == this.uid){
+        const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
+        if(this.state == "replayable" && this.rolling == false && this.remaining != 3){
+          let ancientDices = [...this.dices];
+          let savedDices = [...this.savedDices];
+          
+          let removedDice = ancientDices.splice(ancientDices.indexOf(this.number),1);
 
-        savedDices.push(removedDice[0])
+          savedDices.push(removedDice[0])
 
-        await yamsCollection.update({
-          dices: ancientDices,
-          dicesSaved: savedDices,
-        });
-      } else if(this.state == "saved" && this.rolling == false && this.remaining != 0){
-        let ancientDices = [...this.dices];
-        let savedDices = [...this.savedDices];
-        
-        let removedDice = savedDices.splice(savedDices.indexOf(this.number),1);
+          await yamsCollection.update({
+            dices: ancientDices,
+            dicesSaved: savedDices,
+          });
+        } else if(this.state == "saved" && this.rolling == false && this.remaining != 0){
+          let ancientDices = [...this.dices];
+          let savedDices = [...this.savedDices];
+          
+          let removedDice = savedDices.splice(savedDices.indexOf(this.number),1);
 
-        ancientDices.push(this.number);
+          ancientDices.push(this.number);
 
-        await yamsCollection.update({
-          dices: ancientDices,
-          dicesSaved: savedDices,
-        });
+          await yamsCollection.update({
+            dices: ancientDices,
+            dicesSaved: savedDices,
+          });
+        }
       }
     }
   },
   mounted(){
+    if(this.rolling == true){
+      this.currentlyRolling = setInterval(() => {
+        this.currentlyRoll()}, 100
+      )
+    } else {
+      clearInterval(this.currentlyRolling)
+    }
+  },
+  updated(){
     if(this.rolling == true){
       this.currentlyRolling = setInterval(() => {
         this.currentlyRoll()}, 100

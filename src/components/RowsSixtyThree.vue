@@ -83,7 +83,7 @@ export default {
       }
       .score{
         flex-basis: 50px;
-        margin-left: 20px;
+        margin-left: 10px;
         .number{
           margin: 0;
           font-weight: bold;

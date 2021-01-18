@@ -1,5 +1,5 @@
 <template>
-  <div v-if="pseudo.length > 1 && pseudo.length <= 12" class="game-selector">
+  <div v-if="pseudo && pseudo.length > 1 && pseudo.length <= 12" class="game-selector">
     <h1 class="title">Choissisez le jeu auquel vous voulez jouez</h1>
     <div class="game-container">
       <GamePresentation :pseudo="pseudo" name="Yam's" image="dice.png" link="yams"/>

@@ -16,12 +16,13 @@ export default {
 
 <style lang="scss" scoped>
   .player{
-    margin-left: 20px;
+    margin-left: 10px;
     flex-basis: 50px;
+    margin-top: 10px;
     .name{
       font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       color: white;
-      font-size: 1.1em;
+      font-size: 0.8em;
       &--active{
         color: goldenrod;
       }

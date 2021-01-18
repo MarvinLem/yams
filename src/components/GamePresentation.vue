@@ -8,6 +8,7 @@
 <script>
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 
 export default {
   name: 'GamePresentation',
@@ -35,7 +36,6 @@ export default {
       const yamsCollection = this.db.collection('yams').doc('09G7eSiV0rWqoPR0gsNW');
       let newPlayer;
       let newCurrentPlayer;
-      let uid = Math.floor(Math.random() * 10000000000);
       if(this.players) {
         newPlayer = this.players;
       } else {
@@ -46,13 +46,31 @@ export default {
       } else {
         newCurrentPlayer = 1;
       }
-      newPlayer.push({id: uid, name: this.pseudo})
 
-      this.$session.start();
-      this.$session.set('id',uid);
+      //Add user to database
+      await firebase.auth().signInAnonymously()
+        .then(() => {
+          // Signed in..
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+        });
+      //Get UserID
+      await firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          var uid = user.uid;
+          newPlayer.push({id: uid, name: this.pseudo})
+          this.$session.start();
+          this.$session.set('id',uid);
+        } else {
+          this.$router.push('');
+        }
+      });
 
+      //Add anonymous user to game
       await yamsCollection.update({
-        players: newPlayer,
+        playersInLobby: newPlayer,
         currentPlayer: newCurrentPlayer
       });
       this.$router.push(link);

@@ -56,6 +56,12 @@ export default {
     }, err => {
       console.log(`Encountered error: ${err}`);
     });
+    let player = this.players.map(function(player) { return player.id; }).indexOf(this.$session.get('id'));
+    /*
+    await yamsCollection.onDisconnect().update({
+      
+    });
+    */
   }
 };
 </script>
@@ -63,6 +69,7 @@ export default {
 <style lang="scss" scoped>
   .yams{
     background-color: #2C2F33;
+    display: flex;
     width: calc(100vw - 24px);
     height: calc(100vh - 24px);
     padding: 12px;

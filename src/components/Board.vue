@@ -6,6 +6,7 @@
     <CheckScoreboard v-if="remaining == 0"/>
     <DicesActions :rolling="rolling"/>
     <RestartButton/>
+    <PlayersInLobby/>
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import DicesReplay from '@/components/DicesReplay.vue';
 import CheckScoreboard from '@/components/CheckScoreboard.vue';
 import DicesActions from '@/components/DicesActions.vue';
 import RestartButton from '@/components/RestartButton.vue';
+import PlayersInLobby from '@/components/PlayersInLobby.vue';
 
 export default {
   name: 'Board',
@@ -25,7 +27,8 @@ export default {
     DicesReplay,
     CheckScoreboard,
     DicesActions,
-    RestartButton
+    RestartButton,
+    PlayersInLobby
   },
   computed: {
     rolling () {
@@ -41,10 +44,12 @@ export default {
 <style lang="scss" scoped>
   .board{
     display: inline-block;
+    flex-grow: 1;
     vertical-align: top;
-    width: calc(75% - 12px);
+    width: auto;
     height: calc(100vh - 24px);
     border-radius: 20px;
     background-color: #36393F;
+    position: relative;
   }
 </style>

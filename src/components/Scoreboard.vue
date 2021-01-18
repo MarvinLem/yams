@@ -57,6 +57,7 @@ export default {
   .scoreboard{
     display: inline-block;
     width: 25%;
+    min-width: 420px;
     margin-right: 12px;
     height: calc(100vh - 24px);
     border-radius: 20px;
